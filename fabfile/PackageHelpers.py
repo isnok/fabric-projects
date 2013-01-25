@@ -13,7 +13,7 @@ class DebianPackages(WrappedShellCode):
         WrappedShellCode.__init__(self, name, desc, install_cmd)
 
 
-from fabfile.RealShit import whatsreal
+from fabfile.reality import whatsreal
 from fabfile.CompositeTasks import CompositeTask
 from fabric.api import settings
 from fabric.api import prefix

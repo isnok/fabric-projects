@@ -32,8 +32,10 @@ detected = []
 for modulefile in get_submodules(mod_path):
     mod_name = modulefile.replace('.py', '')
     detected.append(mod_name)
-    if mod_name in config['enabled_submodules']:
+    print mod_name
+    if not mod_name in config['disabled_submodules']:
         module = "%s.%s" % (project, mod_name)
+        print "Importing", module
         __import__(module)
 
 
@@ -133,4 +135,4 @@ def update(name):
     print green('\nUpdating %s from %s.' % (name, project))
     with hide('running'):
         local('./clean.sh')
-        local('cp -v %s/__init__.py %s/__init__.py' % (project, name))
+        local('cp -vi %s/__init__.py %s/project.cfg %s' % (project, project, name))
