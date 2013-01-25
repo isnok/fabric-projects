@@ -21,7 +21,7 @@ from fabric.api import local
 from fabric.api import hide
 
 def getScript(name):
-    for module in (scripts, putexec, putsudo, postgre):
+    for module in (): # local scripts, soon to come
         try:
             return getattr(module, name)
         except:
