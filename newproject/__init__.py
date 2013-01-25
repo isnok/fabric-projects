@@ -10,6 +10,24 @@ project = __name__
 from fabfile import ConfigHandling
 config = ConfigHandling.load_config(project)
 
+# Then we define stuff that our submodules might use.
+
+from fabric.colors import green, cyan, white, yellow, red
+
+from fabfile.EyeCandy import confirm_settings
+from fabric.api import task
+from fabric.api import local
+
+from fabric.api import hide
+
+def getScript(name):
+    for module in (scripts, putexec, putsudo, postgre):
+        try:
+            return getattr(module, name)
+        except:
+            pass
+    raise KeyError('Could not find a script named %r.' % name)
+
 
 # Then we look at our submodules.
 
@@ -28,8 +46,6 @@ def get_submodules(path):
     modules.remove('__init__.py')
     return modules
 
-from fabric.colors import green, cyan, white, yellow, red
-
 detected = []
 for modulefile in get_submodules(mod_path):
     mod_name = modulefile.replace('.py', '')
@@ -38,27 +54,13 @@ for modulefile in get_submodules(mod_path):
         module = "%s.%s" % (project, mod_name)
         try:
             __import__(module)
+            print green("Imported %s" % module)
         except Exception, ex:
             print red("Caught an Exception importing %r:" % module)
             print ex.message
 
 
-
-from fabfile.EyeCandy import confirm_settings
-from fabric.api import task
-from fabric.api import local
-
-from fabric.api import hide
-
-
-def getScript(name):
-    for module in (scripts, putexec, putsudo, postgre):
-        try:
-            return getattr(module, name)
-        except:
-            pass
-    raise KeyError('Could not find a script named %r.' % name)
-
+# Finally we define our tasks
 
 @task
 def show():
