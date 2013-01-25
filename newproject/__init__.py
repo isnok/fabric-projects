@@ -28,15 +28,20 @@ def get_submodules(path):
     modules.remove('__init__.py')
     return modules
 
+from fabric.colors import green, cyan, white, yellow, red
+
 detected = []
 for modulefile in get_submodules(mod_path):
     mod_name = modulefile.replace('.py', '')
     detected.append(mod_name)
-    print mod_name
     if not mod_name in config['disabled_submodules']:
         module = "%s.%s" % (project, mod_name)
-        print "Importing", module
-        __import__(module)
+        try:
+            __import__(module)
+        except Exception, ex:
+            print red("Caught an Exception importing %r:" % module)
+            print ex.message
+
 
 
 from fabfile.EyeCandy import confirm_settings
@@ -44,7 +49,6 @@ from fabric.api import task
 from fabric.api import local
 
 from fabric.api import hide
-from fabric.colors import green, cyan, white, yellow
 
 
 def getScript(name):
@@ -135,4 +139,5 @@ def update(name):
     print green('\nUpdating %s from %s.' % (name, project))
     with hide('running'):
         local('./clean.sh')
-        local('cp -vi %s/__init__.py %s/project.cfg %s' % (project, project, name))
+        local('cp -v %s/__init__.py %s/__init__.py' % (project, name))
+        local('cp -i %s/project.cfg %s' % (project, name))

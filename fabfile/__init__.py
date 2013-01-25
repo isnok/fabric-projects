@@ -33,7 +33,7 @@ env['detected_projects'] = detected
 env['enabled_projects'] = enabled
 
 # import fabfile submodules
-for module in config['enabled_submodules']:
+for module in config['fab_extra_submodules']:
     __import__("%s.%s" % (project, module))
 
 # import enabled projects
