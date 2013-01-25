@@ -131,7 +131,7 @@ def clone(name=None):
     print green("\nCloning %s to %s." % (project, name))
     with hide('running'):
         local('cp -riv %s %s' % (project, name))
-
+    local('sed -i 1s/%s/%s/ %s/__init__.py' % (project, name, name))
 
 @task
 def update(name):
@@ -142,4 +142,5 @@ def update(name):
     with hide('running'):
         local('./clean.sh')
         local('cp -v %s/__init__.py %s/__init__.py' % (project, name))
+        local('sed -i 1s/%s/%s/ %s/__init__.py' % (project, name, name))
         local('cp -i %s/project.cfg %s' % (project, name))
