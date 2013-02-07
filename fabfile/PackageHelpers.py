@@ -23,6 +23,8 @@ class PipPackages(CompositeTask):
 
     """ Some python pip packages to be installed (via eggproxy). """
 
+    eggproxy = "http://127.0.0.1:8888"
+
     def __init__(self, name, desc, packages, prefix="true"):
         CompositeTask.__init__(self, name, desc=desc)
         self.packages = packages
@@ -36,10 +38,7 @@ class PipPackages(CompositeTask):
     def install(self, package):
         really = whatsreal()
         with settings(prefix(self.prefix), warn_only=True):
-            res = really.sudo('pip install --index=http://f1-eggproxy.infosys.de:8888 %s' % package)
-            if type(res) is not str and res.succeeded:
-                return
-            res = really.sudo('pip install --index=http://f1-eggproxy.infosys.de:9999 %s' % package)
+            res = really.sudo('pip install --index=%s %s' % (self.eggproxy, package))
             if type(res) is not str and res.succeeded:
                 return
         with settings(prefix(self.prefix)):
