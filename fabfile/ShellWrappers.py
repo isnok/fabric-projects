@@ -14,7 +14,7 @@ class WrappedShellCommand:
 
     def __str__(self):
         clsstr = colors.cyan("<%s:" % self.__class__.__name__)
-        cmdstr = getattr(RealShit.notreally, self.run_func)(self.cmd, printit=False)
+        cmdstr = getattr(reality.notreally, self.run_func)(self.cmd, printit=False)
         endstr = colors.cyan(" ;>")
         return clsstr + cmdstr + endstr
 
@@ -26,7 +26,7 @@ class WrappedShellCommand:
             )
 
     def execute(self, stack=None):
-        really = RealShit.whatsreal()
+        really = reality.whatsreal()
         run = getattr(really, self.run_func)
         with self.settings():
             run(self.cmd)

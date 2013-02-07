@@ -10,6 +10,24 @@ project = __name__
 from fabfile import ConfigHandling
 config = ConfigHandling.load_config(project)
 
+# Then we define stuff that our submodules might use.
+
+from fabric.colors import green, cyan, white, yellow, red
+
+from fabfile.EyeCandy import confirm_settings
+from fabric.api import task
+from fabric.api import local
+
+from fabric.api import hide
+
+def getScript(name):
+    for module in (): # local scripts, soon to come
+        try:
+            return getattr(module, name)
+        except:
+            pass
+    raise KeyError('Could not find a script named %r.' % name)
+
 
 # Then we look at our submodules.
 
@@ -32,27 +50,17 @@ detected = []
 for modulefile in get_submodules(mod_path):
     mod_name = modulefile.replace('.py', '')
     detected.append(mod_name)
-    if mod_name in config['enabled_submodules']:
+    if not mod_name in config['disabled_submodules']:
         module = "%s.%s" % (project, mod_name)
-        __import__(module)
-
-
-from fabfile.EyeCandy import confirm_settings
-from fabric.api import task
-from fabric.api import local
-
-from fabric.api import hide
-from fabric.colors import green, cyan, white, yellow
-
-
-def getScript(name):
-    for module in (scripts, putexec, putsudo, postgre):
         try:
-            return getattr(module, name)
-        except:
-            pass
-    raise KeyError('Could not find a script named %r.' % name)
+            __import__(module)
+            print green("Imported %s" % module)
+        except Exception, ex:
+            print red("Caught an Exception importing %r:" % module)
+            print ex.message
 
+
+# Finally we define our tasks
 
 @task
 def show():
@@ -123,7 +131,7 @@ def clone(name=None):
     print green("\nCloning %s to %s." % (project, name))
     with hide('running'):
         local('cp -riv %s %s' % (project, name))
-
+    local('sed -i 1s/%s/%s/ %s/__init__.py' % (project, name, name))
 
 @task
 def update(name):
@@ -134,3 +142,5 @@ def update(name):
     with hide('running'):
         local('./clean.sh')
         local('cp -v %s/__init__.py %s/__init__.py' % (project, name))
+        local('sed -i 1s/%s/%s/ %s/__init__.py' % (project, name, name))
+        local('cp -i %s/project.cfg %s' % (project, name))
