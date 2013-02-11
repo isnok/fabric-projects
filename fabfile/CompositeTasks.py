@@ -17,7 +17,13 @@ class CompositeTask(Task):
             desc += " "
         self.__doc__ = desc
         if self.todo:
-            self.__doc__ += "(%s)" % ", ".join([cyan(t.name) for t in self.todo])
+            self.__doc__ += "(%s)" % ", ".join([self.get_name(t) for t in self.todo])
+
+    def get_name(self, task):
+        if hasattr(task, 'name'):
+            return cyan(task.name)
+        else:
+            return cyan('???')
 
     def add_task(self, task):
         self.todo.append(task)
