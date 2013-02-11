@@ -19,6 +19,7 @@ def load_config(project):
         env[main_cfg_key] = config
         sanitize = get_bool(project, 'sanitize_configs', False)
         get_bool(project, 'sanitize_configs', sanitize, True)
+        config['eggproxies'] = get_list(config, 'eggproxies', None)
         return config
 
     config = ConfigObj('%s%s%s' % (project, path.sep, project_cfg_name))
@@ -63,3 +64,20 @@ def get_bool(project, key, sanitize=None, sane=None):
             print "Sanitizing %r because of %r was %r. Correcting to %r." % (cfg.filename, key, cfg_value, sane)
             cfg.write()
     return bool(result)
+
+
+def get_list(config, key, default):
+
+    """ Get a list of values from projects config. """
+
+    try:
+        value = config[key]
+        if not value:
+            value = []
+        elif type(value) is not list:
+            value = [value]
+    except:
+        value = []
+
+    return value
+

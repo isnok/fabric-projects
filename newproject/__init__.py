@@ -70,12 +70,12 @@ def show():
     print
     print "Detected submodules of %s:" % cyan(project)
     for subdir in detected:
-        if subdir in config['enabled_submodules']:
-            abled_state = green("enabled")
-            hint = "to %s run: %s.disable:%s" % (white('disable'), white(project), subdir)
-        else:
+        if subdir in config['disabled_submodules']:
             abled_state = yellow("disabled")
             hint = "to %s run: %s.enable:%s" % (white('enable'), white(project), subdir)
+        else:
+            abled_state = green("enabled")
+            hint = "to %s run: %s.disable:%s" % (white('disable'), white(project), subdir)
 
         print
         print "  %s (%s)" % (cyan(subdir), abled_state)

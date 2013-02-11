@@ -12,6 +12,10 @@ project = __name__
 from fabfile import ConfigHandling
 config = ConfigHandling.load_config(project)
 
+# Now we configure our modules.
+from fabfile.PackageHelpers import PipPackages
+PipPackages.eggproxies = config['eggproxies']
+
 # Then we detect and import (if enabled) the project py files.
 
 detected = []
