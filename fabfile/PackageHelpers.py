@@ -19,11 +19,8 @@ class GitRepository(WrappedShellCode):
     """ A git repo to be cloned. """
 
     def __init__(self, name, desc, repo, dest, **kw):
-        clone_cmds = '''
-            mkdir -p %s
-            git clone %s %s
-        ''' % (dest, repo, dest)
-        WrappedShellCode.__init__(self, name, desc, clone_cmds, **kw)
+        clone_cmd = 'git clone %s %s' % (dest, repo, dest)
+        WrappedShellCode.__init__(self, name, desc, clone_cmd, **kw)
 
 
 from fabfile.reality import whatsreal
