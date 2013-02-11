@@ -19,7 +19,7 @@ class GitRepository(WrappedShellCode):
     """ A git repo to be cloned. """
 
     def __init__(self, name, desc, repo, dest, **kw):
-        clone_cmd = 'git clone %s %s' % (dest, repo, dest)
+        clone_cmd = 'git clone %s %s' % (repo, dest)
         WrappedShellCode.__init__(self, name, desc, clone_cmd, **kw)
 
 
