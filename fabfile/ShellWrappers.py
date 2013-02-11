@@ -39,11 +39,12 @@ class WrappedShellCode(CompositeTask):
 
     """ A linewise fab-wrapped shell script. """
 
-    def __init__(self, name, desc, script, chdir="", warn_only=0, prefix=""):
+    def __init__(self, name, desc, script, chdir="", warn_only=0, prefix="", sudo=False):
         CompositeTask.__init__(self, name, desc=desc)
         self.chdir = chdir
         self.warn_only = bool(warn_only)
         self.prefix = prefix
+        self.sudo = sudo
         self.add_script(script)
 
     def add_file(self, filename, *args, **kw):
@@ -52,9 +53,10 @@ class WrappedShellCode(CompositeTask):
     def add_script(self, cmd_str, *args, **kw):
         cmd_lst = cmd_str.replace("\n", ";").split(';')
         for cmd in cmd_lst:
-            self.add_cmd(cmd.strip(), *args, **kw)
+            self.add_cmd(cmd, *args, **kw)
 
     def add_cmd(self, cmd, chdir=None, warn_only=None, prefix=None):
+        cmd = cmd.strip()
         if chdir is None:
             chdir = self.chdir
         if warn_only is None:
@@ -63,9 +65,12 @@ class WrappedShellCode(CompositeTask):
             prefix = self.prefix
 
         run_func = "run"
+        if self.sudo:
+            run_func = "sudo"
         if cmd[:5] == "sudo ":
             run_func = "sudo"
-            cmd = cmd[5:]
+            cmd = cmd[5:].strip()
+
         if cmd and not cmd[0] == "#":
             self.todo.append(WrappedShellCommand(cmd, run_func, chdir, warn_only, prefix))
 
