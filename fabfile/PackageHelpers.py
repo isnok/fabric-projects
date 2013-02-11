@@ -9,8 +9,9 @@ class DebianPackages(WrappedShellCode):
     """ Some debian packages to be installed. """
 
     def __init__(self, name, desc, packages):
-        install_cmd = "sudo aptitude -q install %s" % (" ".join(packages))
-        WrappedShellCode.__init__(self, name, desc, install_cmd)
+        install_cmd = "aptitude -q install %s" % (" ".join(packages))
+        #install_cmd = "apt-get install %s" % (" ".join(packages))
+        WrappedShellCode.__init__(self, name, desc, install_cmd, sudo=True)
 
 
 class GitRepository(WrappedShellCode):
