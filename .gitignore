@@ -1,4 +1,5 @@
 *.pyc
+projects.cfg
 still2refactor
 xmlapi
 fc2
